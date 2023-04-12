@@ -1,28 +1,53 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-link
+      to="/MusicPlayer"
+      class="musicPlayer"
+    >MusicPlayer</router-link>
+    <router-link
+      to="/RepeatPlayer"
+      class="repeatPlayer"
+    >RepeatPlayer</router-link>
+    <router-view />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data () {
+    return {
+
+    }
+  },
+  created () {
+
+  },
+  mounted () {
+
+  },
+  methods: {
   }
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #000;
   margin-top: 60px;
+}
+
+.musicPlayer,
+.repeatPlayer {
+  font-size: 20px;
+  text-decoration-line: none;
+  color: #000;
+}
+.repeatPlayer {
+  margin-left: 60px;
 }
 </style>
