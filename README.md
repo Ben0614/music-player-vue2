@@ -1,4 +1,4 @@
-# music-player
+# music-player-vue2
 
 [![vue](https://img.shields.io/badge/vue-2.6.14-green)](https://github.com/vuejs/vue)
 
