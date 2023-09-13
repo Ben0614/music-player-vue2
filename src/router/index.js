@@ -5,14 +5,14 @@ Vue.use(Router)
 
 export const routes = [
   {
+    path: '/SimplePlayer',
+    name: 'simplePlayer',
+    component: () => import( '@/pages/SimplePlayer.vue'),
+  },
+  {
     path: '/MusicPlayer',
     name: 'musicPlayer',
     component: () => import( '@/pages/MusicPlayer.vue'),
-  },
-  {
-    path: '/RepeatPlayer',
-    name: 'repeatPlayer',
-    component: () => import( '@/pages/RepeatPlayer.vue'),
   }
 ]
 

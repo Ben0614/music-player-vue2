@@ -4,20 +4,20 @@
 
 ## 概述
 
-此專案使用Vue和原生JavaScript所構成，主要在音樂與歌詞之間做同步處理。
+此專案使用Vue2和原生JavaScript所構成，主要在音樂與歌詞之間做同步處理。
 
 ## 安裝
 
 1.克隆此專案到本地
 
 ```
-git clone https://github.com/Ben0614/music-player.git
+git clone https://github.com/Ben0614/music-player-vue2.git
 ```
 
 2.進入專案目錄
 
 ```
-cd music-player
+cd music-player-vue2
 ```
 
 3.安裝相依套件
@@ -34,7 +34,7 @@ yarn dev
 
 ## 使用指南
 
-這裡將簡單介紹主要功能與使用。
+有分成SimplePlayer和MusicPlayer，以下主要介紹MusicPlayer的主要功能與使用。
 
 ### 標註當前歌詞
 

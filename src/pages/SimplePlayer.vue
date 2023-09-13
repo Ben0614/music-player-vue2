@@ -9,7 +9,7 @@
         :class="isPlay ? 'rotateAnimation' : 'rotateAnimation singlePaused'"
       >
         <img
-          :src="require('@/assets/images/青と夏.jpg')"
+          :src="require('@/assets/images/心にもないこと.jpg')"
           alt=""
           class="single"
         >
@@ -18,38 +18,22 @@
       <audio
         ref="audioPlayer"
         controls
-        :src="require('@/data/青と夏.mp3')"
+        :src="require('@/data/心にもないこと.mp3')"
       />
       <!-- 歌詞 -->
       <div>
         <h3
           v-for="(lrc,lrcIndex) in lrcs"
           :key="lrcIndex"
-          :class="isActive(lrc) ? 'activeWord' : 'word'"
-          @mouseenter="rowNumber = lrcIndex"
-        >
-          <!-- 歌詞 -->
-          <span @click="goToThisRow(lrc)">{{lrc.word}}</span>
-          <!-- 單行重複播放 -->
-          <span
-            v-if="rowNumber === lrcIndex"
-            :style="{marginLeft:'12px',color:repeatLrc === lrc && isRepeat ? activeColor : ''}"
-            @click="handleRepeat('repeat',lrc)"
-            class="icon"
-          >▶</span>
-          <!-- 取消單行重複播放 -->
-          <span
-            v-if="rowNumber === lrcIndex"
-            :style="{marginLeft:'12px'}"
-            @click="handleRepeat('cancel',lrc)"
-            class="icon"
-          >◼</span>
+          :class="isActive(lrc,lrcIndex) ? 'activeWord' : 'word'"
+          @click="goToThisRow(lrc)"
+        >{{lrc.word}}
         </h3>
       </div>
     </div>
     <!-- 背景 -->
     <img
-      :src="require('@/assets/images/青と夏bgc.jpg')"
+      :src="require('@/assets/images/心にもないことbgc.jpg')"
       alt=""
       class="bgc"
     >
@@ -59,9 +43,9 @@
 </template>
 
 <script>
-import singDataJson from '@/data/青と夏.json'
+import singDataJson from '@/data/心にもないこと.json'
 export default {
-  name: 'MusicPlayer',
+  name: 'SimplePlayer',
   data () {
     return {
       singData: singDataJson,
@@ -75,10 +59,6 @@ export default {
       source: null,
       bufferLength: 0,
       dataArray: [],
-      // 重複單行
-      isRepeat: false,
-      rowNumber: 0,
-      repeatLrc: {},
     }
   },
   computed: {
@@ -88,11 +68,10 @@ export default {
   },
   created () {
     // 歌詞陣列 包含時間和歌詞
-    this.singData.startTime.forEach((startTime, index) => {
+    this.singData.startTime.forEach((time, index) => {
       const lrc = {
         // 轉時間格式
-        startTime: this.parseTime(startTime),
-        endTime: this.parseTime(this.singData.endTime[index]),
+        time: this.parseTime(time),
         word: this.singData.lyrics[index]
       }
       this.lrcs.push(lrc)
@@ -115,12 +94,6 @@ export default {
     // 將時間賦給this.currentTime
     useTimeupdate () {
       this.currentTime = this.$refs.audioPlayer.currentTime
-      // 單行重複播放 && 播放器時間 >= 此行歌詞的endTime
-      if (this.isRepeat && this.$refs.audioPlayer.currentTime >= this.repeatLrc.endTime) {
-        // 重新賦startTime給audioPlayer.currentTime
-        this.$refs.audioPlayer.currentTime = this.repeatLrc.startTime
-        this.currentTime = this.$refs.audioPlayer.currentTime
-      }
     },
     // 播放就調用波型fucntion
     usePlay () {
@@ -138,33 +111,27 @@ export default {
       return +parts[0] * 60 + +parts[1]
     },
     // 判斷是否為現在的歌詞
-    isActive (lrc) {
-      // 播放時間 >= 歌詞開始時間 && 播放時間 < 下一段歌詞開始時間
-      if (this.currentTime >= lrc.startTime && this.currentTime < lrc.endTime) {
-        return true
+    isActive (lrc, lrcIndex) {
+      // 不是最後一行
+      if (lrcIndex !== this.lrcs.length - 1) {
+        // 播放時間 >= 歌詞開始時間 && 播放時間 < 下一段歌詞開始時間
+        if (this.currentTime >= lrc.time && this.currentTime < this.lrcs[lrcIndex + 1].time) {
+          return true
+        }
+      }
+      // 是最後一行
+      if (lrcIndex === this.lrcs.length - 1) {
+        // 播放時間 >= 歌詞開始時間
+        if (this.currentTime >= lrc.time) {
+          return true
+        }
       }
     },
     // 跳到這一行
     goToThisRow (lrc) {
-      this.$refs.audioPlayer.currentTime = lrc.startTime
+      this.$refs.audioPlayer.currentTime = lrc.time
       this.currentTime = this.$refs.audioPlayer.currentTime
       this.$refs.audioPlayer.play()
-    },
-    // 重複單行歌詞
-    handleRepeat (type, lrc) {
-      // 開啟單行重複播放
-      if (type === 'repeat') {
-        this.isRepeat = true
-        this.repeatLrc = lrc
-        this.$refs.audioPlayer.currentTime = lrc.startTime
-        this.currentTime = this.$refs.audioPlayer.currentTime
-        this.$refs.audioPlayer.play()
-      }
-      // 取消重複播放
-      if (type === 'cancel') {
-        this.isRepeat = false
-      }
-
     },
     // 獲取波型資料
     createWaveForm () {
@@ -269,13 +236,11 @@ export default {
 }
 
 .title,
-.word,
-.icon {
+.word {
   color: black;
 }
 
-.word,
-.icon {
+.word {
   cursor: pointer;
 }
 
